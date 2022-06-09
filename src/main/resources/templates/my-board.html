@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="ISO-8859-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeeGridBuilder-Example</title>
+  <link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+	<nav class="navbar fixed-top  navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="/${board.idBoard}">GridBuilder</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+				aria-controls="navbarScroll" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarScroll">
+				<ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+					style="-bs-scroll-height: 100px;">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							My Boards </a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li th:each="board : ${boards}"><a class="dropdown-item"
+								th:href="'/'+${board.idBoard}"
+								th:text="'Board'+ ${board.idBoard}"></a></li>
+
+						</ul></li>
+					<li class="nav-item"><a class="nav-link " aria-current="page"
+						th:href="@{/type}">Type</a></li>
+					<li class="nav-item"><a class="nav-link" href="user">User</a></li>
+					</ul>
+			</div>
+		</div>
+	</nav>
+	<div style="overflow: scroll;" class="container-fluid">
+		<div id="shell">
+			<div class="bag" th:each="bag : ${board.bags}">
+				<div class="knot grid" th:each="block : ${bag.blocks}"
+					th:onclick="'showModal('+${knot.idBlock}+')'"
+					th:style="${block.type} != null?'background:'+ ${block.type.color}:''">
+					<img th:src="'/img/'+${block.states.imgUrl}" />
+					<h6 th:text="${block.tag}"></h6>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:fragment="modal-content" id="modal-shell">
+		<div id="modal-knot" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+
+				<div class="modal-content" th:if="${knot} != null">
+					<form th:action="@{/save-block}" th:object="${block}">
+						<input type="hidden" th:field="*{idBlock}">
+						<input type="hidden" th:field="*{bag.idBag}">
+						<input type="hidden" name="board" th:value="*{bag.board.idBoard}">
+						<div class="modal-header">
+							<h5 class="modal-title" th:text="${block.position}"></h5>
+						</div>
+						<div class="modal-body">
+							<div class="form-row">
+								<label class="form-label">Tag</label> <input type="text"
+									 th:field="*{tag}" class="form-control">
+							</div>
+
+							<div class="form-row">
+								<label class="form-label">Type</label> <select
+									th:field="*{type}" class="form-control form-control">
+									<option th:each="typeSelect: ${types}" th:text="${typeSelect.description}"
+										th:value="${typeSelect.idType}"></option>
+								</select>
+
+							</div>
+
+
+							<div class="form-row">
+								<label class="form-label">States</label> 
+								<select 
+									th:field="*{states}" class="form-control form-control">
+									<option
+										th:each="states: ${T(beegridbuilder.block.blockStates).values()}"
+										th:text="${states}" th:value="${states}"></option>
+								</select>
+
+							</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">Save</button>
+							</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" th:src="@{/js/board.js}"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+
+
+
+</body>
+</html>
