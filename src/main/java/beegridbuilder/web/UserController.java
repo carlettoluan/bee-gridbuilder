@@ -31,6 +31,17 @@ public class UserController {
 	public List<Board> getBoards(){
 		return boardRepository.findAll();
 	}
+	
+	@RequestMapping("/")
+    public String home() {
+		if(getBoards().isEmpty()) {
+			return "example";
+		} else {
+			return "redirect:/"+getBoards().get(0).getIdBoard();
+		}
+        
+    }
+	
 	@RequestMapping("/{id}")
 	public String  home(Model model,@PathVariable("id")Long id) {
 		model.addAttribute("board", boardRepository.findById(id).get());

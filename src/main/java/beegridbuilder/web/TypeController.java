@@ -30,6 +30,16 @@ public class TypeController {
 	public List<Board> getBoards(){
 		return boardRepository.findAll();
 	}
+	
+	@RequestMapping("/")
+    public String home() {
+		if(getBoards().isEmpty()) {
+			return "example";
+		} else {
+			return "redirect:/"+getBoards().get(0).getIdBoard();
+		}
+        
+    }
 	@RequestMapping()
 	public String home(Model model) {
 		model.addAttribute("typeList", repository.findAll());

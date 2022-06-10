@@ -34,9 +34,14 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/")
-		public String home(Model model) {
-		return "redirect:../resources/templates/example.html";
-	}
+    public String home() {
+		if(getBoards().isEmpty()) {
+			return "example";
+		} else {
+			return "redirect:/"+getBoards().get(0).getIdBoard();
+		}
+        
+    }
 	
 	@RequestMapping("/{id}")
 	public String  home(Model model,@PathVariable("id")Long id) {

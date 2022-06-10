@@ -18,7 +18,7 @@
 
 	<nav class="navbar fixed-top  navbar-expand-lg navbar-light bg-light">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="/${board.idBoard}">GridBuilder</a>
+			<a class="navbar-brand" href="/">GridBuilder</a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarScroll"
 				aria-controls="navbarScroll" aria-expanded="false"
@@ -41,6 +41,8 @@
 					<li class="nav-item"><a class="nav-link " aria-current="page"
 						th:href="@{/type}">Type</a></li>
 					<li class="nav-item"><a class="nav-link" href="user">User</a></li>
+					<button type="button" class="btn btn-danger nav-link" href="delete"> Delete</button>
+					<li class="nav-item"><a class="nav-link" href="delete">Delete</a></li>
 					</ul>
 			</div>
 		</div>
@@ -48,7 +50,7 @@
 	<div style="overflow: scroll;" class="container-fluid">
 		<div id="shell">
 			<div class="bag" th:each="bag : ${board.bags}">
-				<div class="knot grid" th:each="block : ${bag.blocks}"
+				<div class="block grid" th:each="block : ${bag.blocks}"
 					th:onclick="'showModal('+${block.idBlock}+')'"
 					th:style="${block.type} != null?'background:'+ ${block.type.color}:''">
 					<img th:src="'/img/'+${block.states.imgUrl}" />
@@ -61,10 +63,10 @@
 		</div>
 	</div>
 	<div th:fragment="modal-content" id="modal-shell">
-		<div id="modal-knot" class="modal" tabindex="-1" role="dialog">
+		<div id="modal-block" class="modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 
-				<div class="modal-content" th:if="${knot} != null">
+				<div class="modal-content" th:if="${block} != null">
 					<form th:action="@{/save-block}" th:object="${block}">
 						<input type="hidden" th:field="*{idBlock}">
 						<input type="hidden" th:field="*{bag.idBag}">
@@ -93,7 +95,7 @@
 								<select 
 									th:field="*{states}" class="form-control form-control">
 									<option
-										th:each="states: ${T(beegridbuilder.block.blockStates).values()}"
+										th:each="states: ${T(beegridbuilder.block.BlockStates).values()}"
 										th:text="${states}" th:value="${states}"></option>
 								</select>
 
